@@ -3,7 +3,7 @@ Server: https://deploy.d.evops.co/
 Project: Takofukku
 Mappings:
   - 
-    Branch: Master
+    Branch: master
     Environment: Production
   - 
     Branch: release
