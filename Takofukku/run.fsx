@@ -32,6 +32,7 @@ open Octopus.Client
 open System.Configuration
 open System.Net
 open System.Net.Http
+open System.Text
 open System.Net.Http.Headers
 open System.IO
 open Newtonsoft.Json
@@ -69,8 +70,9 @@ let GetTakoFile(repo: String, token: String, log: TraceWriter) =
                         headers = header
                         ) 
     log.Info(sprintf "Takofile retrieved from github") |> ignore
-    takofile // a string containing YAML
+    takofile 
 
+// refactor, not yet in use
 let DeployFromOctopus(server: String, apikey: String, environment: String, project: String, log: TraceWriter) =
     log.Info(sprintf "Running the Octopus Deploy as a function")
     let endpoint = Octopus.Client.OctopusServerEndpoint(server, apikey)
@@ -104,8 +106,10 @@ let DeployFromOctopus(server: String, apikey: String, environment: String, proje
     depl.EnvironmentId <- env.Id
     octo.Deployments.Create(depl) |> ignore
 
-let CreateReleaseNotes commits = //placeholder
-    0
+let CreateReleaseNotes(headcommit: Object) = //placeholder
+   // for refactoring the ugly release notes away
+    ""
+
 
 // main request responder
 let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
@@ -149,6 +153,24 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
         if not (String.IsNullOrEmpty(data)) then
                 log.Info(sprintf "We have a post body : " + data)
                 let EventData = PushEvent.Parse(data)
+
+                // big ugly string builder for the release notes. I'm getting tired. Shhhh.
+                let msg = StringBuilder()
+                msg.AppendLine("Release Created by [Takofukku](https://github.com/stopthatastronaut/takofukku)") |> ignore
+                msg.AppendLine("") |> ignore
+                msg.AppendLine("Head Commit:") |> ignore
+                msg.Append("[") |> ignore
+                msg.Append(EventData.HeadCommit.Message) |> ignore
+                msg.Append("](") |> ignore
+                msg.Append(EventData.HeadCommit.Url) |> ignore
+                msg.Append(")") |> ignore
+                msg.Append(" - [") |> ignore
+                msg.Append(EventData.HeadCommit.Author.Username) |> ignore
+                msg.Append("](") |> ignore
+                msg.Append(EventData.HeadCommit.Author.Email) |> ignore
+                msg.Append(")") |> ignore
+
+                let releasenotes = msg.ToString()
 
                 // split out the ref 
                 let targetbranch = 
@@ -217,7 +239,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let release = Octopus.Client.Model.ReleaseResource()
                 release.ProjectId <- prj.Id
                 release.Version <- tmpl.NextVersionIncrement
-                release.ReleaseNotes <- "Created by Takofukku" // add detailed commit messages here
+                release.ReleaseNotes <- releasenotes // "Created by Takofukku" // add detailed commit messages here
                 for pkg in tmpl.Packages do
                     let spkg = Octopus.Client.Model.SelectedPackage()
                     spkg.StepName <- pkg.StepName
