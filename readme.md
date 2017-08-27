@@ -47,6 +47,10 @@ CreateRelease: true
 
 You can add as many mappings as you like. If you don't provide mappings, Takofukku will default to master->Production.
 
+## What about channels
+
+At present, Takofukku only supports Default as a channel. Full channel support is coming soon
+
 ## My repos are private. Can I still use it?
 
 Yes, you can.
