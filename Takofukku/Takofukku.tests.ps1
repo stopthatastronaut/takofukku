@@ -6,7 +6,7 @@ $remoteUrl = "https://hook.takofukku.io/api/Takofukku?code="+$secrets.azuresecre
 $pushevent = gc .\Takofukku\models\pushevent.json -raw |  ConvertFrom-Json
 
 
-irm $remoteUrl -ContentType "application/json" -Body ($pushevent | ConvertTo-Json -depth 5)  -Method POST -verbose 
+irm $localurl -ContentType "application/json" -Body ($pushevent | ConvertTo-Json -depth 5)  -Method POST -verbose 
 
 
 

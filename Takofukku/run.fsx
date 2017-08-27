@@ -108,6 +108,7 @@ let DeployFromOctopus(server: String, apikey: String, environment: String, proje
 
 let CreateReleaseNotes(headcommit: Object) = //placeholder
    // for refactoring the ugly release notes away
+   // will use a nice neat Seq operation, I suspect
     ""
 
 
@@ -158,7 +159,10 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let msg = StringBuilder()
                 msg.AppendLine("Release Created by [Takofukku](https://github.com/stopthatastronaut/takofukku)") |> ignore
                 msg.AppendLine("") |> ignore
-                msg.AppendLine("Head Commit:") |> ignore
+                msg.AppendLine("") |> ignore
+                msg.AppendLine("*Head Commit*:") |> ignore
+                msg.AppendLine("") |> ignore 
+                msg.AppendLine("") |> ignore
                 msg.Append("[") |> ignore
                 msg.Append(EventData.HeadCommit.Message) |> ignore
                 msg.Append("](") |> ignore
@@ -166,7 +170,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 msg.Append(")") |> ignore
                 msg.Append(" - [") |> ignore
                 msg.Append(EventData.HeadCommit.Author.Username) |> ignore
-                msg.Append("](") |> ignore
+                msg.Append("](mailto:") |> ignore
                 msg.Append(EventData.HeadCommit.Author.Email) |> ignore
                 msg.Append(")") |> ignore
 
