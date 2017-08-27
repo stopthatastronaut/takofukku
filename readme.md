@@ -24,6 +24,8 @@ Takofukku is especially strong at deploying code that doesn't pre-build artifact
 - Packaging workflows driven out of github
 - Any project which doesn't use nuget packages
 
+However Octopus being Octopus, you can do pretty much anything with a bit of script. I look forward to seeing what kind of weird solutions this inpires.
+
 ## Ooooh. What's a takofile?
 
 A takofile is not unlike `appveyor.yml` or `.travis.yml`. It's a little file that lives in the root of your github repo, and defines a branch-to-environment mapping, a repo-to-project mapping, and some other common config bits.
@@ -58,9 +60,9 @@ CreateRelease: true
 
 You can add as many mappings as you like. If you don't provide mappings, Takofukku will default to master->Production.
 
-## What about channels
+## What about channels?
 
-At present, Takofukku only supports Default as a channel. Full channel support is coming soon
+At present, Takofukku only supports Default as a channel. Full channel support is coming soon. It also might not work on older versions of OD. Yet.
 
 ## It always creates a new release. What gives?
 
