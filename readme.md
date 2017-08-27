@@ -29,13 +29,20 @@ Go to settings in your github repository and set up a webhook integration that c
 Then in the root of your repo, add a takofile as follows
 
 ```
-Server: https://octopus.mydomain.com/
-Project: My Octopus Project
+---
+Server: https://deploy.d.evops.co/
+Project: Takofukku
 Mappings:
-	master: Production
-    release: Staging
-    develop: UAT
-CreateRelease = true
+  - 
+    Branch: master
+    Environment: Production
+  - 
+    Branch: release
+    Environment: Staging
+  - 
+    Branch: develop
+    Environment: UAT
+CreateRelease: true
 ```
 
 You can add as many mappings as you like. If you don't provide mappings, Takofukku will default to master->Production.
