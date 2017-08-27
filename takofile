@@ -1,14 +1,11 @@
 ---
-Server: https://deploy.d.evops.co/
+Server: https://deploy.modelfile.local/
 Project: Takofukku
 Mappings:
   - 
-    Branch: master
-    Environment: Production
+    master: Production
   - 
-    Branch: release
-    Environment: Staging
+    release: Staging
   - 
-    Branch: develop
-    Environment: UAT
+    develop: UAT
 CreateRelease: true

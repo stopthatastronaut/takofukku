@@ -115,11 +115,11 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let targetbranch = 
                     let refsplit = EventData.Ref.Split [|'/'|]
                     refsplit.[2]
-
+  
 
 
                 log.Info(sprintf 
-                    "We have parsed our post body. Push event arrived from repo" + 
+                    "We have parsed our post body. Push event arrived from repo " + 
                     EventData.Repository.FullName + 
                     "on branch " +
                     EventData.Ref)  // we need to split that ref
@@ -129,19 +129,61 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 tk.LoadText(tako)
 
                 let srv = tk.Server
+                let proj = tk.Project
+
+                log.Info(sprintf "Takofile server: " + srv.OriginalString + 
+                                " Takofile project: " + proj + 
+                                " Target branch: " + targetbranch)
 
 
-
-
+                
+                // figure out which branch goes to which environment
                 let branchmapping = 
-                    tk.Mappings |> Seq.tryFind (fun q -> q.Branch = targetbranch)
+                    tk.Mappings
+                    |> Seq.tryFind (fun q -> q.Key = targetbranch)
                 
+                let bm =
+                    match branchmapping with
+                    | None ->
+                        log.Info(sprintf "I don't have a branchmapping") |> ignore
+                        ""
+                    | Some x ->
+                        log.Info(sprintf "My branch mapping is " + x.Value) |> ignore
+                        x.Value
+
+
                 // find the branch mapping
-                let targetenv = branchmapping.Value.Environment
+                let targetenv = bm
                 
 
-                log.Info(sprintf "We've pushed the branch "+EventData.Ref+" and found env" + 
+                log.Info(sprintf "We've pushed the branch " + EventData.Ref + " and found env: " + 
                             targetenv)
+
+
+                let endpoint = Octopus.Client.OctopusServerEndpoint(srv.OriginalString, ok)
+                let octo = Octopus.Client.OctopusRepository(endpoint)
+
+                let env = octo.Environments.FindByName(targetenv)
+                let prj = octo.Projects.FindByName(proj)
+                let prc = octo.DeploymentProcesses.Get(prj.DeploymentProcessId)
+                let chn = octo.Channels.FindByName(prj, "Default")  // only default channel for now
+                let tmpl = octo.DeploymentProcesses.GetTemplate(prc, chn)
+
+                let release = Octopus.Client.Model.ReleaseResource()
+                release.ProjectId <- prj.Id
+                release.Version <- tmpl.NextVersionIncrement
+                for pkg in tmpl.Packages do
+                    let spkg = Octopus.Client.Model.SelectedPackage()
+                    spkg.StepName <- pkg.StepName
+                    spkg.Version <- release.Version
+                    release.SelectedPackages.Add(spkg)
+                
+                let cRel = octo.Releases.Create(release)
+                let depl = Octopus.Client.Model.DeploymentResource()
+                depl.ReleaseId <- release.Id
+                depl.ProjectId <- prj.Id
+                depl.EnvironmentId <- env.Id
+                octo.Deployments.Create(depl) |> ignore
 
                 printfn ""  
                 return req.CreateResponse(HttpStatusCode.OK, """{"result" : "ok"}}""")
