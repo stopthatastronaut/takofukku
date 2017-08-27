@@ -140,7 +140,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 // figure out which branch goes to which environment
                 let branchmapping = 
                     tk.Mappings
-                    |> Seq.tryFind (fun q -> q.Key = targetbranch)
+                    |> Seq.tryFind (fun q -> q.Branch = targetbranch)
                 
                 let bm =
                     match branchmapping with
@@ -148,8 +148,8 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                         log.Info(sprintf "I don't have a branchmapping") |> ignore
                         ""
                     | Some x ->
-                        log.Info(sprintf "My branch mapping is " + x.Value) |> ignore
-                        x.Value
+                        log.Info(sprintf "My branch mapping is " + x.Environment) |> ignore
+                        x.Environment
 
 
                 // find the branch mapping
@@ -163,11 +163,16 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let endpoint = Octopus.Client.OctopusServerEndpoint(srv.OriginalString, ok)
                 let octo = Octopus.Client.OctopusRepository(endpoint)
 
+                log.Info(sprintf "Initialised client on " + srv.OriginalString)
+
+
                 let env = octo.Environments.FindByName(targetenv)
                 let prj = octo.Projects.FindByName(proj)
                 let prc = octo.DeploymentProcesses.Get(prj.DeploymentProcessId)
                 let chn = octo.Channels.FindByName(prj, "Default")  // only default channel for now
                 let tmpl = octo.DeploymentProcesses.GetTemplate(prc, chn)
+
+                log.Info(sprintf "grabbing template")
 
                 let release = Octopus.Client.Model.ReleaseResource()
                 release.ProjectId <- prj.Id
@@ -178,12 +183,16 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                     spkg.Version <- release.Version
                     release.SelectedPackages.Add(spkg)
                 
+                log.Info(sprintf "Created a new release with version" + release.Version)
+
                 let cRel = octo.Releases.Create(release)
                 let depl = Octopus.Client.Model.DeploymentResource()
-                depl.ReleaseId <- release.Id
+                depl.ReleaseId <- cRel.Id
                 depl.ProjectId <- prj.Id
                 depl.EnvironmentId <- env.Id
                 octo.Deployments.Create(depl) |> ignore
+
+                log.Info(sprintf "deployment triggered")
 
                 printfn ""  
                 return req.CreateResponse(HttpStatusCode.OK, """{"result" : "ok"}}""")

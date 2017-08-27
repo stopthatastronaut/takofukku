@@ -3,9 +3,12 @@ Server: https://deploy.modelfile.local/
 Project: Takofukku
 Mappings:
   - 
-    master: Production
+    Branch: master
+    Environment: Production
   - 
-    release: Staging
+    Branch: release
+    Environment: Staging
   - 
-    develop: UAT
+    Branch: develop
+    Environment: UAT
 CreateRelease: true
