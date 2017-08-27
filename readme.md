@@ -10,6 +10,10 @@
 
 An Azure function that triggers [Octopus Deploy](https://octopus.com/) Projects from Github push event hooks. 
 
+## What does it do?
+
+When you push to github, it creates a release for you, adds the github head commit as release notes, then deploys the new release.
+
 ## Why?
 
 Because there's currently no built-in webhook solution for Octopus Deploy, and users often roll their own, or use a build server to do the triggering. Not every project *needs* a build server though.
