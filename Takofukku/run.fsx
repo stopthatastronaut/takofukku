@@ -15,7 +15,6 @@ open Microsoft.Azure.WebJobs.Logging
 
 #endif
 
-
 #r "System.Net.Http"
 #r "System.Net"
 #r "Newtonsoft.Json"
@@ -39,6 +38,7 @@ open Newtonsoft.Json
 open FSharp.Core
 open FSharp.Configuration
 
+// models
 
 [<Literal>]
 let ModelPath =  __SOURCE_DIRECTORY__ + "/models/pushevent.json"
@@ -47,6 +47,8 @@ type PushEvent = JsonProvider<ModelPath>
 [<Literal>]
 let TakoFilePath = __SOURCE_DIRECTORY__ + "/models/takofile.yml"
 type TakoFile = YamlConfig<FilePath = TakoFilePath>
+
+// functions
 
 let GetTakoFile(repo: String, token: String, log: TraceWriter) = 
     let targetfile = "https://raw.githubusercontent.com/"+repo+"/master/takofile"
@@ -69,6 +71,40 @@ let GetTakoFile(repo: String, token: String, log: TraceWriter) =
     log.Info(sprintf "Takofile retrieved from github") |> ignore
     takofile // a string containing YAML
 
+let DeployFromOctopus(server: String, apikey: String, environment: String, project: String, log: TraceWriter) =
+    log.Info(sprintf "Running the Octopus Deploy as a function")
+    let endpoint = Octopus.Client.OctopusServerEndpoint(server, apikey)
+    let octo = Octopus.Client.OctopusRepository(endpoint)
+
+    log.Info(sprintf "Initialised client on " + server)
+
+    let env = octo.Environments.FindByName(environment)
+    let prj = octo.Projects.FindByName(project)
+    let prc = octo.DeploymentProcesses.Get(prj.DeploymentProcessId)
+    let chn = octo.Channels.FindByName(prj, "Default")  // only default channel for now
+    let tmpl = octo.DeploymentProcesses.GetTemplate(prc, chn)
+
+    log.Info(sprintf "grabbing template")
+
+    let release = Octopus.Client.Model.ReleaseResource()
+    release.ProjectId <- prj.Id
+    release.Version <- tmpl.NextVersionIncrement
+    for pkg in tmpl.Packages do
+        let spkg = Octopus.Client.Model.SelectedPackage()
+        spkg.StepName <- pkg.StepName
+        spkg.Version <- release.Version
+        release.SelectedPackages.Add(spkg)
+    
+    log.Info(sprintf "Created a new release with version" + release.Version)
+
+    let cRel = octo.Releases.Create(release)
+    let depl = Octopus.Client.Model.DeploymentResource()
+    depl.ReleaseId <- cRel.Id
+    depl.ProjectId <- prj.Id
+    depl.EnvironmentId <- env.Id
+    octo.Deployments.Create(depl) |> ignore
+
+// main request responder
 let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
     async {
         log.Info(sprintf 
@@ -115,8 +151,6 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let targetbranch = 
                     let refsplit = EventData.Ref.Split [|'/'|]
                     refsplit.[2]
-  
-
 
                 log.Info(sprintf 
                     "We have parsed our post body. Push event arrived from repo " + 
@@ -146,7 +180,10 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                     match branchmapping with
                     | None ->
                         log.Info(sprintf "I don't have a branchmapping") |> ignore
-                        ""
+                        if targetbranch = "master" then
+                           "Production"
+                        else
+                            "Staging"
                     | Some x ->
                         log.Info(sprintf "My branch mapping is " + x.Environment) |> ignore
                         x.Environment

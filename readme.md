@@ -8,11 +8,11 @@
 フック
 **Fukku: Hook**
 
-An Azure function that triggers Octopus Deploy from from Github push event hooks. 
+An Azure function that triggers [Octopus Deploy](https://octopus.com/) Projects from Github push event hooks. 
 
 ## Why?
 
-Because there's currently no built-in webhook solution for Octopus deploy, and users often roll their own, or use a build server to trigger. Not every project *needs* a build server though.
+Because there's currently no built-in webhook solution for Octopus Deploy, and users often roll their own, or use a build server to do the triggering. Not every project *needs* a build server though.
 
 Inspired by [Domain's Ops Code pipeline](http://tech.domain.com.au/2015/06/deploy-on-merge-in-domains-devops-repositories/), but with simplified config, a more tweakable deployment engine and a new concept called a **takofile**.
 
@@ -58,7 +58,7 @@ Mappings:
 CreateRelease: true
 ```
 
-You can add as many mappings as you like. If you don't provide mappings, Takofukku will default to master->Production.
+You can add as many mappings as you like. If you don't provide mappings, Takofukku will default to master->Production, everwhere else->Staging
 
 ## What about channels?
 
@@ -94,3 +94,7 @@ Which will run your tests and abort if they fail. To use that, Have a deploy ste
 ## Can I contribute?
 
 In code, in money, or in beer. Yes.
+
+## Can I fork this and run my own private Takofukku?
+
+Sure. That's why it's open source. It runs on the Azure Functions platform, but shouldn't be too hard to adapt to other platforms. Please do contribute back in, though.
