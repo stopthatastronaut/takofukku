@@ -214,6 +214,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let release = Octopus.Client.Model.ReleaseResource()
                 release.ProjectId <- prj.Id
                 release.Version <- tmpl.NextVersionIncrement
+                release.ReleaseNotes <- "Created by Takofukku" // add detailed commit messages here
                 for pkg in tmpl.Packages do
                     let spkg = Octopus.Client.Model.SelectedPackage()
                     spkg.StepName <- pkg.StepName

@@ -24,16 +24,15 @@ Takofukku is especially strong at deploying code that doesn't pre-build artifact
 - Packaging workflows driven out of github
 - Any project which doesn't use nuget packages
 
-However Octopus being Octopus, you can do pretty much anything with a bit of script. I look forward to seeing what kind of weird solutions this inpires.
+However Octopus being Octopus, you can do pretty much anything with a bit of script. I look forward to seeing what kind of weird solutions this inspires, and what sort of things one might want to run on a git push.
 
-## Ooooh. What's a takofile?
+## OK, so... What's a **takofile**?
 
 A takofile is not unlike `appveyor.yml` or `.travis.yml`. It's a little file that lives in the root of your github repo, and defines a branch-to-environment mapping, a repo-to-project mapping, and some other common config bits.
 
 ## OK, so how do I hook this up?
 
-**Takofukku is in private beta right now. I'll be releasing it to the public at large very very soon. But if you want to be a guinea pig, feel free to hit me up. I am [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet). For private beta users, the following will work *with the addition of a secret parameter*
-**
+_Takofukku.io is in private beta right now. I'll be releasing it to the public at large very very soon. But if you want to be a guinea pig, feel free to hit me up. I am [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet). For private beta users, the following will work *with the addition of a secret parameter*_
 
 Go to settings in your github repository and set up a webhook integration that captures the push event. Point that to
 
@@ -82,7 +81,7 @@ While we're talking security, Do use https for your server. Github to Takofukku 
 
 ## Does this mean I can use Octopus Deploy as a CI server?
 
-Yes, you kinda can. Octopus can run F#, PowerShell, C#Script and bash, so if those languages can run your builds and tests, then Octopus *can* run builds for you. It's not really what Octopus is designed for, but it can work. But definitely don't neglet running tests. If it's powerShell you're pushing out, I recommend [Pester](https://github.com/Pester/Pester), with an Octopus script step like this:
+Yes, you kinda can. Octopus can run F#, PowerShell, C#Script and bash, so if those languages can run your builds and tests, then Octopus *can* run builds for you. It's not really what Octopus is designed for, but it can work. But definitely don't neglect running tests. If it's powerShell you're pushing out, I recommend [Pester](https://github.com/Pester/Pester), with an Octopus script step like this:
 
 ```
 $result = Invoke-Pester -EnableExit
