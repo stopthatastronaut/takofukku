@@ -19,11 +19,11 @@ open Microsoft.Azure.WebJobs.Logging
 #r "System.Net.Http"
 #r "System.Net"
 #r "Newtonsoft.Json"
-#r "bin/FSharp.data.dll"
-#r "bin/FSharp.data.DesignTime.dll"
-#r "bin/Octopus.Client.dll"
-#r "bin/SharpYaml.dll"
-#r "bin/FSharp.Configuration.dll"
+#r "binaries/FSharp.data.dll"
+#r "binaries/FSharp.data.DesignTime.dll"
+#r "binaries/Octopus.Client.dll"
+#r "binaries/SharpYaml.dll"
+#r "binaries/FSharp.Configuration.dll"
 #r "System.Configuration"
 
 open SharpYaml
