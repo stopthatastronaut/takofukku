@@ -104,6 +104,9 @@ let DeployFromOctopus(server: String, apikey: String, environment: String, proje
     depl.EnvironmentId <- env.Id
     octo.Deployments.Create(depl) |> ignore
 
+let CreateReleaseNotes commits = //placeholder
+    0
+
 // main request responder
 let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
     async {
@@ -126,7 +129,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 log.Info(sprintf "I don't have an octopus API Key") |> ignore 
                 ""
             | Some x ->
-                log.Info(sprintf "I have an octopus API key " + x.Value) |> ignore
+                log.Info(sprintf "I have an octopus API key ") |> ignore
                 x.Value
         
         // make our token exception-safe
@@ -136,7 +139,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 log.Info(sprintf "I don't have a git token") |> ignore
                 ""
             | Some x ->
-                log.Info(sprintf "I have a git token " + x.Value) |> ignore
+                log.Info(sprintf "I have a git token ") |> ignore
                 x.Value
 
         log.Info(sprintf "Reading async from post body")
