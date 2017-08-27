@@ -195,7 +195,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 log.Info(sprintf "deployment triggered")
 
                 printfn ""  
-                return req.CreateResponse(HttpStatusCode.OK, """{"result" : "ok"}}""")
+                return req.CreateResponse(HttpStatusCode.OK, """{"result" : "ok"}""")
         else
             // no data posted. 
             log.Info(sprintf

@@ -6,9 +6,6 @@ Mappings:
     Branch: master
     Environment: Production
   - 
-    Branch: release
-    Environment: Staging
-  - 
     Branch: develop
-    Environment: UAT
+    Environment: DevTest
 CreateRelease: true

@@ -16,11 +16,22 @@ Because there's currently no built-in webhook solution for Octopus deploy, and u
 
 Inspired by [Domain's Ops Code pipeline](http://tech.domain.com.au/2015/06/deploy-on-merge-in-domains-devops-repositories/), but with simplified config, a more tweakable deployment engine and a new concept called a **takofile**.
 
+Takofukku is especially strong at deploying code that doesn't pre-build artifacts, so supports scenarios such as
+
+- Using Octopus Deploy as a ghetto build/CI server
+- Automating PowerShell tests on multiple targets with Pester
+- Ops deployment projects that do simple git pulls, rather than full builds
+- Packaging workflows driven out of github
+- Any project which doesn't use nuget packages
+
 ## Ooooh. What's a takofile?
 
 A takofile is not unlike `appveyor.yml` or `.travis.yml`. It's a little file that lives in the root of your github repo, and defines a branch-to-environment mapping, a repo-to-project mapping, and some other common config bits.
 
 ## OK, so how do I hook this up?
+
+**Takofukku is in private beta right now. I'll be releasing it to the public at large very very soon. But if you want to be a guinea pig, feel free to hit me up. I am [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet). For private beta users, the following will work *with the addition of a secret parameter*
+**
 
 Go to settings in your github repository and set up a webhook integration that captures the push event. Point that to
 
@@ -50,6 +61,10 @@ You can add as many mappings as you like. If you don't provide mappings, Takofuk
 ## What about channels
 
 At present, Takofukku only supports Default as a channel. Full channel support is coming soon
+
+## It always creates a new release. What gives?
+
+That option is not implemented just yet. But it will be soon.
 
 ## My repos are private. Can I still use it?
 

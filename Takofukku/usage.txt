@@ -1,5 +1,5 @@
-Welcome to Takofukku
-
-Takofukku is a webhook solution that links github push events to Octopus Deploy
-
-For more information, please visit https://github.com/stopthatastronait/TakoFukku 
+{
+    "greeting" : "Welcome to Takofukku.",
+    "what" : "Takofukku is a webhook solution that links github push events to Octopus Deploy",
+    "how" : "For more information, please visit https://github.com/stopthatastronaut/TakoFukku "
+}
