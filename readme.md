@@ -27,7 +27,7 @@ Takofukku is especially strong at deploying code that doesn't pre-built artifact
 - Ops deployment projects that do simple git pulls, rather than full builds
 - Packaging workflows driven out of github
 - Any project which doesn't use nuget packages
-- Anything you want to use Octopus as a post-push task runner for - I have projects that do nothing but email me and send me a slack message.
+- Anything you want to use Octopus as a post-push task runner for - I _literally_ have projects that do nothing but email me and send me a slack message.
 
 Of course, Octopus being Octopus, you can do pretty much anything with a bit of script. I look forward to seeing what kind of weird solutions this inspires, and what sort of things one might want to run on a git push.
 
@@ -86,7 +86,7 @@ While we're talking security, Do use HTTPS for your Octopus server. Github to Ta
 
 ## Does this mean I can use Octopus Deploy as a CI server?
 
-Yes, you kinda can. Octopus can run F#, PowerShell, C#Script and bash, so if those languages can run your builds and tests, then Octopus *can* run builds for you. It's not really what Octopus is designed for, but it can work. But definitely don't neglect running tests. If it's powerShell you're pushing out, I recommend [Pester](https://github.com/Pester/Pester), with an Octopus script step like this:
+Yes, you kinda can. Octopus can run F#, PowerShell, C#Script and bash, so if those languages can run your builds and tests, then Octopus *can* run builds for you. It's not really what Octopus is designed for, but it can work. But definitely don't neglect running tests. If it's PowerShell you're pushing out, I recommend [Pester](https://github.com/Pester/Pester), with an Octopus script step like this:
 
 ```
 $result = Invoke-Pester -EnableExit
@@ -109,7 +109,7 @@ In code, in money, or in beer. Yes.
 
 Sure. That's why it's open source. It runs on the Azure Functions platform, but shouldn't be too hard to adapt to other platforms. Please do contribute back in, though.
 
-## I know you. You've been talking about this for ages. WHy did it take so long?
+## I know you. You've been talking about this for ages. Why did it take so long?
 
 Shut up. I started writing it in Powershell, then decided C# would be better, remembered I don't really like C#, went back to PowerShell, got doubts about performance and scalability and then, eventually, threw it all away in favour of F#. Which is excellent.
 
