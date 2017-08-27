@@ -2,10 +2,11 @@
 $secrets = gc .\.secrets | ConvertFrom-Json
 
 $localUrl = "http://localhost:7071/api/Takofukku?apikey=" + $secrets.octopusapikey
+$remoteUrl = "https://hook.takofukku.io/api/Takofukku?code="+$secrets.azuresecret+"&apikey="+ $secrets.octopusapikey
 $pushevent = gc .\Takofukku\models\pushevent.json -raw |  ConvertFrom-Json
 
 
-irm $localUrl -ContentType "application/json" -Body ($pushevent | ConvertTo-Json -depth 5)  -Method POST -verbose 
+irm $remoteUrl -ContentType "application/json" -Body ($pushevent | ConvertTo-Json -depth 5)  -Method POST -verbose 
 
 
 
