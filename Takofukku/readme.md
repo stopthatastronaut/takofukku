@@ -1,11 +1,11 @@
-# HttpTrigger - F<span>#</span>
+# Takofukku
 
-The `HttpTrigger` makes it incredibly easy to have your functions executed via an HTTP call to your function.
+The core function handling takofukku operations. Receives push events from github, calls back to github to get the Takofile, triggers a deployment in Octopus as per the Takofile's config.
 
 ## How it works
 
-When you call the function, be sure you checkout which security rules you apply. If you're using an apikey, you'll need to include that in your request.
+Magic
 
-## Learn more
+## To run locally
 
-<TODO> Documentation
+`func host start` at the root of the repo
