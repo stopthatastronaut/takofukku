@@ -152,7 +152,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
         log.Info(sprintf "Post body read") 
 
         if not (String.IsNullOrEmpty(data)) then
-                log.Info(sprintf "We have a post body : " + data)
+                // log.Info(sprintf "We have a post body : " + data)
                 let EventData = PushEvent.Parse(data)
 
                 // big ugly string builder for the release notes. I'm getting tired. Shhhh.
@@ -208,7 +208,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let bm =
                     match branchmapping with
                     | None ->
-                        log.Info(sprintf "I don't have a branchmapping") |> ignore
+                        log.Info(sprintf "I don't have a branch mapping") |> ignore
                         if targetbranch = "master" then
                            "Production"
                         else
