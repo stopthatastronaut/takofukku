@@ -38,7 +38,7 @@ A takofile is not unlike `appveyor.yml` or `.travis.yml`. It's a little file tha
 
 ## OK, so how do I hook this up?
 
-_Takofukku.io is in private beta right now. I'll be releasing it to the public at large very very soon. But if you want to be a guinea pig, feel free to hit me up. I am [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet). For private beta users, the following will work *with the addition of a secret parameter*_
+_Takofukku.io is in open beta right now. This means you can access hook.takofukku.io, but I can't guarantee 99.999% reliable service just yet. Please report problems here, or to [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet) _
 
 Go to settings in your github repository and set up a webhook integration that captures the push event. Point that to
 
