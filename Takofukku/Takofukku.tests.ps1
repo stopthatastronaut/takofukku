@@ -1,3 +1,14 @@
+# is the host running? try func host start
+
+try
+{
+    iwr http://localhost:7071/
+}
+catch
+{
+    & func host start
+}
+
 # get key from .secret
 $secrets = gc .\.secrets | ConvertFrom-Json
 

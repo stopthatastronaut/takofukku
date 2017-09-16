@@ -152,7 +152,6 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
         log.Info(sprintf "Post body read") 
 
         if not (String.IsNullOrEmpty(data)) then
-                // log.Info(sprintf "We have a post body : " + data)
                 let EventData = PushEvent.Parse(data)
 
                 // big ugly string builder for the release notes. I'm getting tired. Shhhh.
@@ -191,8 +190,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let tk = TakoFile()
                 tk.LoadText(tako)
 
-                let srv = tk.Server
-                let proj = tk.Project
+                let srv, proj = tk.Server, tk.Project
 
                 log.Info(sprintf "Takofile server: " + srv.OriginalString + 
                                 " Takofile project: " + proj + 
