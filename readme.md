@@ -28,9 +28,9 @@ Takofukku is especially strong at deploying code that doesn't pre-built artifact
 - Packaging workflows driven out of github
 - Run your tests, then call back to Github and create a Release if they pass
 - Any project which doesn't use nuget packages
-- Anything you want to use Octopus as a post-push task runner for - I _literally_ have projects that do nothing but email me and send me a slack message.
+- Anything for which you want to run in Octopus as a post-push task - I _literally_ have projects that do nothing but email me and send me a slack message.
 
-Of course, Octopus being Octopus, you can do pretty much anything with a bit of script. I look forward to seeing what kind of weird solutions this inspires, and what sort of things one might want to run on a git push.
+Of course, Octopus being Octopus, you can do pretty much anything with a bit of PowerShell, C#, Bash or F#. I look forward to seeing what kind of weird solutions this inspires, and what sort of things one might want to run on a git push.
 
 ## OK, so... What's a **takofile**?
 
