@@ -93,7 +93,7 @@ Yes, you kinda can. Octopus can run F#, PowerShell, C#Script and bash, so if tho
 
 ```
 $result = Invoke-Pester -EnableExit
-EXIT $result
+Fail-Step "$result failed Pester tests"
 ```
 
 Which will run your tests and abort if they fail. To use that, Have a deploy step that throws your code in a sandbox location, then the tests, then move the deployed code into its target location. Like this project, for instance:
