@@ -114,7 +114,13 @@ Sure. That's why it's open source. It runs on the Azure Functions platform, but 
 
 ## Does this work with Bitbucket?
 
-Not yet. Bitbucket's hook payload is slightly different. Soon though.
+Not yet. Bitbucket's hook payload is slightly different, and I haven't written anything to support that difference. Soon though.
+
+## Getting Support
+
+"Ah, I set it all up and it's not working!"
+
+Get in touch with [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet) and I'll do what I can. Obviously I don't offer commercial support at the moment, but if you're interested in using this for something mission-critical, do let me know. 
 
 ## I know you. You've been talking about this for ages. Why did it take so long?
 
