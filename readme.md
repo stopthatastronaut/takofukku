@@ -16,6 +16,8 @@ When you push to github, it creates a release for you, adds the github head comm
 
 ## Why?
 
+*Don't care why? [Jump to the quickstart](#ok-so-how-do-i-hook-this-up)*
+
 Because there's currently no built-in webhook solution for Octopus Deploy, and users often roll their own, or use a build server to do the triggering. Not every project *needs* a build server though.
 
 Inspired by [Domain's Ops Code pipeline](http://tech.domain.com.au/2015/06/deploy-on-merge-in-domains-devops-repositories/), but with simplified config, a more tweakable deployment engine and a new concept called a **takofile**.
@@ -38,7 +40,7 @@ A takofile is not unlike `appveyor.yml` or `.travis.yml`. It's a little file tha
 
 ## OK, so how do I hook this up?
 
-_Takofukku.io is in open beta right now. This means you can access hook.takofukku.io, but I can't guarantee 99.999% reliable service just yet. Please report problems here, or to [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet) _
+*Takofukku.io is in open beta right now. This means you can access hook.takofukku.io, but I can't guarantee 99.999% reliable service just yet. Please report problems here, or to [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet)*
 
 Go to settings in your github repository and set up a webhook integration that captures the push event. Point that to
 
@@ -109,6 +111,10 @@ In code, in money, or in beer. Yes.
 ## Can I fork this and run my own private Takofukku?
 
 Sure. That's why it's open source. It runs on the Azure Functions platform, but shouldn't be too hard to adapt to other platforms. Please do contribute back in, though.
+
+## Does this work with Bitbucket?
+
+Not yet. Bitbucket's hook payload is slightly different. Soon though.
 
 ## I know you. You've been talking about this for ages. Why did it take so long?
 
