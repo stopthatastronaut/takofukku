@@ -83,7 +83,7 @@ Yes, you can.
 
 ## About Tokens and API keys
 
-Takofukku doesn't store your tokens or API keys. The source code is in this very repo, so you can check that for yourself. However, it's still worth dedicating a specific API key and token solely to Takofukku, to make key rotation easier. It's a good idea to rotate these keys periodically, and this process can be automated. There's some [more info here](permissions.md)
+Takofukku doesn't store your tokens or API keys. The source code is in this very repo, so you can check that for yourself. However, it's still worth dedicating a specific API key and token solely to Takofukku, to make key rotation easier and to track exactly what Takofukku gets up to. It's a good idea to rotate these keys periodically, and this process can be automated. There's some [more info here](permissions.md)
 
 While we're talking security, Do use HTTPS for your Octopus server. Github to Takofukku is encrypted, but Takofukku to Octopus is under your control, in your takofile. Do use https. Octopus now [natively supports LetsEncrypt](https://octopus.com/docs/administration/lets-encrypt-integration), so please use it.
 
