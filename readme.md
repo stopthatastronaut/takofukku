@@ -79,7 +79,7 @@ That option is not implemented just yet. But it will be soon.
 
 Yes, you can.
 
-`https://hook.takofukku.io/Takofukku?apikey=<your octopus api key>&accesstoken=<github personal access token>`
+`https://hook.takofukku.io/api/Takofukku?apikey=<your octopus api key>&patoken=<github personal access token>`
 
 ## About Tokens and API keys
 

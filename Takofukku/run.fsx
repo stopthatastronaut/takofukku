@@ -51,8 +51,8 @@ type TakoFile = YamlConfig<FilePath = TakoFilePath>
 
 // functions
 
-let GetTakoFile(repo: String, token: String, log: TraceWriter) = 
-    let targetfile = "https://raw.githubusercontent.com/"+repo+"/master/takofile"
+let GetTakoFile(repo: String, token: String, log: TraceWriter, branch: String) = 
+    let targetfile = "https://raw.githubusercontent.com/"+repo+"/"+branch+"/takofile"
 
     log.Info(sprintf "Requesting takofile from " + targetfile)
 
@@ -185,7 +185,8 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                     EventData.Repository.FullName + 
                     "on branch " +
                     EventData.Ref)  // we need to split that ref
-                let tako = GetTakoFile(EventData.Repository.FullName, gt, log) 
+                // TODO: takofile is always coming from master. Fix to pull from correct branch
+                let tako = GetTakoFile(EventData.Repository.FullName, gt, log, targetbranch) 
                 // make that string into an object using the YAML type provider
                 let tk = TakoFile()
                 tk.LoadText(tako)
