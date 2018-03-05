@@ -185,7 +185,6 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                     EventData.Repository.FullName + 
                     "on branch " +
                     EventData.Ref)  // we need to split that ref
-                // TODO: takofile is always coming from master. Fix to pull from correct branch
                 let tako = GetTakoFile(EventData.Repository.FullName, gt, log, targetbranch) 
                 // make that string into an object using the YAML type provider
                 let tk = TakoFile()
