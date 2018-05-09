@@ -157,8 +157,6 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 // big ugly string builder for the release notes. I'm getting tired. Shhhh.
                 let msg = StringBuilder()
                 msg.AppendLine("*Head Commit*:") |> ignore
-                msg.AppendLine("") |> ignore 
-                msg.AppendLine("") |> ignore
                 msg.Append("[") |> ignore
                 msg.Append(EventData.HeadCommit.Message) |> ignore
                 msg.Append("](") |> ignore
@@ -170,8 +168,8 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 msg.Append(EventData.HeadCommit.Author.Email) |> ignore
                 msg.Append(")") |> ignore
                 msg.AppendLine("") |> ignore
-                msg.AppendLine("Release Created by [Takofukku](https://github.com/stopthatastronaut/takofukku)") |> ignore
                 msg.AppendLine("") |> ignore
+                msg.AppendLine("Release Created by [Takofukku](https://github.com/stopthatastronaut/takofukku)") |> ignore
 
                 let releasenotes = msg.ToString()
 
