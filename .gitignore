@@ -5,7 +5,6 @@ csx
 .vs
 edge
 Publish
-.vscode
 
 *.user
 *.suo
@@ -24,3 +23,4 @@ project.lock.json
 appsettings.json
 local.settings.json
 .secret.json
+.SSL
