@@ -13,11 +13,14 @@ open Microsoft.Azure.WebJobs
 open Microsoft.Azure.WebJobs.Host
 open Microsoft.Azure.WebJobs.Logging
 
-#endif
+#else
 
 #r "System.Net.Http"
-#r "System.Net"
 #r "Newtonsoft.Json"
+
+#endif
+
+#r "System.Net"
 #r "binaries/FSharp.data.dll"
 #r "binaries/FSharp.data.DesignTime.dll"
 #r "binaries/Octopus.Client.dll"
@@ -26,16 +29,15 @@ open Microsoft.Azure.WebJobs.Logging
 #r "System.Configuration"
 
 open SharpYaml
-open FSharp.Data 
+open Newtonsoft.Json
+open FSharp.Data
 open FSharp.Data.JsonExtensions
 open Octopus.Client
 open System.Configuration
 open System.Net
-open System.Net.Http
 open System.Text
 open System.Net.Http.Headers
 open System.IO
-open Newtonsoft.Json
 open FSharp.Core
 open FSharp.Configuration
 
@@ -43,7 +45,7 @@ open FSharp.Configuration
 
 [<Literal>]
 let ModelPath =  __SOURCE_DIRECTORY__ + "/models/pushevent.json"
-type PushEvent = JsonProvider<ModelPath>
+type PushEvent = FSharp.Data.JsonProvider<ModelPath>
 
 [<Literal>]
 let TakoFilePath = __SOURCE_DIRECTORY__ + "/models/takofile.yml"
@@ -51,30 +53,30 @@ type TakoFile = YamlConfig<FilePath = TakoFilePath>
 
 // functions
 
-let GetTakoFile(repo: String, token: String, log: TraceWriter, branch: String) = 
+let GetTakoFile(repo: String, token: String, log: TraceWriter, branch: String) =
     let targetfile = "https://raw.githubusercontent.com/"+repo+"/"+branch+"/takofile"
 
     log.Info(sprintf "Requesting takofile from " + targetfile)
 
-    let header = 
+    let header =
         match token with
-        | "" -> 
+        | "" ->
             log.Info(sprintf "Takofukku found an empty token") |> ignore
-            ["X-Tako-Client", "Takofukku/1.0"] 
-        | _ ->   
+            ["X-Tako-Client", "Takofukku/1.0"]
+        | _ ->
             log.Info(sprintf "Takofukku found a non-empty token") |> ignore
-            ["Authorization", "token " + token; "X-Tako-Client", "Takofukku/1.0"]  
+            ["Authorization", "token " + token; "X-Tako-Client", "Takofukku/1.0"]
 
-    let takofile = Http.RequestString(   
+    let takofile = Http.RequestString(
                         targetfile,
                         headers = header
-                        ) 
+                        )
     log.Info(sprintf "Takofile retrieved from github") |> ignore
-    takofile 
+    takofile
 
 // refactor, not yet in use
 let DeployFromOctopus(server: String, apikey: String, environment: String, project: String, log: TraceWriter) =
-    log.Info(sprintf "Running the Octopus Deploy as a function")
+    log.Info(sprintf "Running the Octopus Deploy as a function": String)
     let endpoint = Octopus.Client.OctopusServerEndpoint(server, apikey)
     let octo = Octopus.Client.OctopusRepository(endpoint)
 
@@ -96,7 +98,7 @@ let DeployFromOctopus(server: String, apikey: String, environment: String, proje
         spkg.StepName <- pkg.StepName
         spkg.Version <- release.Version
         release.SelectedPackages.Add(spkg)
-    
+
     log.Info(sprintf "Created a new release with version" + release.Version)
 
     let cRel = octo.Releases.Create(release)
@@ -115,14 +117,14 @@ let CreateReleaseNotes(headcommit: Object) = //placeholder
 // main request responder
 let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
     async {
-        log.Info(sprintf 
-            "Takofukku started")        
+        log.Info(sprintf
+            "Takofukku started")
 
-        let qs = 
-            HttpRequestMessageExtensions.GetQueryNameValuePairs(req)
+        let qs =
+            System.Net.Http.HttpRequestMessageExtensions.GetQueryNameValuePairs(req)
         // Set name to query string
         let octopusAPIKey =
-            qs |> Seq.tryFind (fun q -> q.Key = "apikey") 
+            qs |> Seq.tryFind (fun q -> q.Key = "apikey")
 
         let gittoken =
             qs |> Seq.tryFind (fun q -> q.Key = "patoken")
@@ -130,17 +132,17 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
         // make our octopus key exception-safe
         let ok =
             match octopusAPIKey with
-            | None -> 
-                log.Info(sprintf "I don't have an octopus API Key") |> ignore 
+            | None ->
+                log.Info(sprintf "I don't have an octopus API Key") |> ignore
                 ""
             | Some x ->
                 log.Info(sprintf "I have an octopus API key ") |> ignore
                 x.Value
-        
+
         // make our token exception-safe
-        let gt = 
+        let gt =
             match gittoken with
-            | None -> 
+            | None ->
                 log.Info(sprintf "I don't have a git token") |> ignore
                 ""
             | Some x ->
@@ -149,7 +151,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
 
         log.Info(sprintf "Reading async from post body")
         let! data = req.Content.ReadAsStringAsync() |> Async.AwaitTask
-        log.Info(sprintf "Post body read") 
+        log.Info(sprintf "Post body read")
 
         if not (String.IsNullOrEmpty(data)) then
                 let EventData = PushEvent.Parse(data)
@@ -158,7 +160,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                 let msg = StringBuilder()
                 msg.AppendLine("*Head Commit*:") |> ignore
                 msg.Append("[") |> ignore
-                msg.Append(EventData.HeadCommit.Message) |> ignore
+                msg.Append(EventData.HeadCommit.Message : string) |> ignore
                 msg.Append("](") |> ignore
                 msg.Append(EventData.HeadCommit.Url) |> ignore
                 msg.Append(")") |> ignore
@@ -173,34 +175,34 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
 
                 let releasenotes = msg.ToString()
 
-                // split out the ref 
-                let targetbranch = 
+                // split out the ref
+                let targetbranch =
                     let refsplit = EventData.Ref.Split [|'/'|]
                     refsplit.[2]
 
-                log.Info(sprintf 
-                    "We have parsed our post body. Push event arrived from repo " + 
-                    EventData.Repository.FullName + 
+                log.Info(sprintf
+                    "We have parsed our post body. Push event arrived from repo " +
+                    EventData.Repository.FullName +
                     "on branch " +
                     EventData.Ref)  // we need to split that ref
-                let tako = GetTakoFile(EventData.Repository.FullName, gt, log, targetbranch) 
+                let tako = GetTakoFile(EventData.Repository.FullName, gt, log, targetbranch)
                 // make that string into an object using the YAML type provider
                 let tk = TakoFile()
                 tk.LoadText(tako)
 
                 let srv, proj = tk.Server, tk.Project
 
-                log.Info(sprintf "Takofile server: " + srv.OriginalString + 
-                                " Takofile project: " + proj + 
+                log.Info(sprintf "Takofile server: " + srv.OriginalString +
+                                " Takofile project: " + proj +
                                 " Target branch: " + targetbranch)
 
 
-                
+
                 // figure out which branch goes to which environment
-                let branchmapping = 
+                let branchmapping =
                     tk.Mappings
                     |> Seq.tryFind (fun q -> q.Branch = targetbranch)
-                
+
                 let bm =
                     match branchmapping with
                     | None ->
@@ -216,9 +218,9 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
 
                 // find the branch mapping
                 let targetenv = bm
-                
 
-                log.Info(sprintf "We've pushed the branch " + EventData.Ref + " and found env: " + 
+
+                log.Info(sprintf "We've pushed the branch " + EventData.Ref + " and found env: " +
                             targetenv)
 
 
@@ -245,7 +247,7 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
                     spkg.StepName <- pkg.StepName
                     spkg.Version <- release.Version
                     release.SelectedPackages.Add(spkg)
-                
+
                 log.Info(sprintf "Created a new release with version" + release.Version)
 
                 let cRel = octo.Releases.Create(release)
@@ -257,14 +259,14 @@ let Run(req: System.Net.Http.HttpRequestMessage, log: TraceWriter) =
 
                 log.Info(sprintf "deployment triggered")
 
-                printfn ""  
+                printfn ""
                 return req.CreateResponse(HttpStatusCode.OK, """{"result" : "ok"}""")
         else
-            // no data posted. 
+            // no data posted.
             log.Info(sprintf
                 "No data was posted. Invalid request") // print usage at this point
 
             let usagebody = File.ReadAllText(__SOURCE_DIRECTORY__ + "/usage.txt")
-            return req.CreateResponse(HttpStatusCode.OK, usagebody) 
+            return req.CreateResponse(HttpStatusCode.OK, usagebody)
 
-    } |> Async.RunSynchronously  
+    } |> Async.RunSynchronously

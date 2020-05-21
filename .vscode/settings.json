@@ -1,5 +1,6 @@
 {
   "azureFunctions.projectRuntime": "~1",
   "azureFunctions.projectLanguage": "F#Script",
-  "azureFunctions.templateFilter": "All"
+  "azureFunctions.templateFilter": "All",
+  "FSharp.fsacRuntime": "net"
 }
