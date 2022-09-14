@@ -14,6 +14,18 @@ An Azure function that triggers [Octopus Deploy](https://octopus.com/) Projects 
 
 When you push to github, it creates a release for you, adds the github head commit as release notes, then deploys the new release.
 
+{% note %}
+
+**Retirement of Takofukku v1 is now imminent**
+
+It is nowadays much easier to just iuse a github action to trigger Octopus Processes. However some other use cases still exist for a webhook bridge, so v2 is under development and this particular repo will be retired in preparation for replacement.
+
+If you are using TakoFukku (and the stats suggest not many still are, though there DO seem to be one or two), you're advised to migrate your stuff over to a GitHub Action ASAP.
+
+The original hook.takofukku.io will stay running, though I can't guarantee it'll get any updates.
+
+{% endnote %}
+
 ## Why?
 
 *Don't care why? [Jump to the quickstart](#ok-so-how-do-i-hook-this-up)*
@@ -39,8 +51,6 @@ Of course, Octopus being Octopus, you can do pretty much anything with a bit of 
 A takofile is not unlike `appveyor.yml` or `.travis.yml`. It's a little file that lives in the root of your github repo, and defines a branch-to-environment mapping, a repo-to-project mapping, and some other common config bits.
 
 ## OK, so how do I hook this up?
-
-*Takofukku.io is in open beta right now. This means you can access hook.takofukku.io, but I can't guarantee 99.999% reliable service just yet. Please report problems here, or to [@cloudyopspoet on Twitter](https://twitter.com/cloudyopspoet)*
 
 Go to settings in your github repository and set up a webhook integration that captures the push event. Point that to
 
